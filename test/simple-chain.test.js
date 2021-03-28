@@ -9,10 +9,8 @@ const chainMaker = require('../src/simple-chain.js');
 describe('Make chain!', () => {
     //Presence requirement
     describe('variable presence', () => {
-        it.optional('object chainMaker exists', () => {
+        it.optional('function makeChain exists', () => {
             expect(chainMaker).to.exist;
-            const type = typeof chainMaker;
-            expect(type).to.be.equal('object');
         });
     });
 
@@ -20,22 +18,11 @@ describe('Make chain!', () => {
         it.optional('chaining works!', () => {
             assert.deepEqual(chainMaker.addLink(function() {}).addLink('2nd').addLink('3rd').removeLink(2).reverseChain().finishChain(),'( 3rd )~~( function() {} )');
         });
-        
-        it.optional('throws an Error on removing wrong link', function() {
-            let res = null;
-            try {
-                chainMaker.addLink(1).addLink(2).addLink(3).removeLink(0);
-                chainMaker.addLink(1).addLink(2).addLink(3).removeLink('2nd');
-                chainMaker.addLink(1).addLink(2).addLink(3).removeLink(-2);
-                chainMaker.addLink(1).addLink(2).addLink(3).removeLink(4);
-            } catch(err) {
-                if (err._validationProp === 'NA') {
-                    this.skip();
-                  } else {
-                    res = 'THROWN';
-                  }
-            }
-            assert.equal(res, 'THROWN');
+        it.optional('throws an Error on removing wrong link', () => {
+            expect(() => chainMaker.addLink(1).addLink(2).addLink(3).removeLink(0)).to.throw();
+            expect(() => chainMaker.addLink(1).addLink(2).addLink(3).removeLink('2nd')).to.throw();
+            expect(() => chainMaker.addLink(1).addLink(2).addLink(3).removeLink(-2)).to.throw();
+            expect(() => chainMaker.addLink(1).addLink(2).addLink(3).removeLink(4)).to.throw();
         });
     });
 
